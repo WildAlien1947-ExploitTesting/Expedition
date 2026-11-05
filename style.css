@@ -1,0 +1,29 @@
+h1{
+color: #00ffff;
+    text-align: center;    
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+font-style: bold;
+text-shadow: 
+0 0 5px #00ffff,    /* Inner tight glow */
+0 0 10px #00ffff,   /* Medium glow */
+0 0 20px #00ffff,   /* Broad glow */
+0 0 40px #00ffff,   /* Soft outer glow */
+0 0 80px #00ffff;   /* Wide diffused glow */;
+}
+
+p{
+color: #00ffff;
+    text-align: center;    
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+font-style: bold;
+text-shadow: 
+0 0 5px #00ffff,    /* Inner tight glow */
+0 0 10px #00ffff,   /* Medium glow */
+0 0 20px #00ffff,   /* Broad glow */
+0 0 40px #00ffff,   /* Soft outer glow */
+0 0 80px #00ffff;   /* Wide diffused glow */;
+}
+
+body{
+background-color: black;    
+}
