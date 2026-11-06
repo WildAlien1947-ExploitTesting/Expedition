@@ -73,13 +73,13 @@
 
       <div class="catalog-tools">
         <div class="filter-list" role="group" aria-label="Filter games by genre">
-          <button class="filter-button selected" type="button" data-filter="all" aria-pressed="true">All games <span>06</span></button>
+          <button class="filter-button selected" type="button" data-filter="all" aria-pressed="true">All games <span>08</span></button>
           <button class="filter-button" type="button" data-filter="puzzle" aria-pressed="false">Puzzle</button>
           <button class="filter-button" type="button" data-filter="arcade" aria-pressed="false">Arcade</button>
           <button class="filter-button" type="button" data-filter="strategy" aria-pressed="false">Strategy</button>
           <button class="filter-button" type="button" data-filter="action" aria-pressed="false">Action</button>
         </div>
-        <p class="results-count" id="results-count" aria-live="polite">SHOWING <b>06</b> GAMES</p>
+        <p class="results-count" id="results-count" aria-live="polite">SHOWING <b>08</b> GAMES</p>
       </div>
 
       <div class="game-grid" id="game-grid">
@@ -112,6 +112,16 @@
           <div class="game-art art-wordle"><span class="art-label">FIVE LETTERS. SIX GUESSES.</span><span class="word-tiles" aria-hidden="true"><i>W</i><i>O</i><i>R</i><i>D</i><i>!</i></span><span class="art-rating">★ 4.8</span></div>
           <div class="game-info"><div><p class="game-category">PUZZLE <span>·</span> DAILY</p><h3>Word Guess</h3></div><button class="play-link" type="button" aria-label="Play Word Guess">↗</button></div>
           <p class="game-description">Find the five-letter word in six tries.</p>
+        </article>
+        <article class="game-card" data-game="tictactoe" data-category="strategy" data-search="tic tac toe strategy board x o three in a row classic">
+          <div class="game-art art-tictactoe"><span class="art-label">THREE IN A ROW</span><span class="game-emoji" aria-hidden="true">✕</span><span class="tictactoe-pips" aria-hidden="true">◯ × ◯</span><span class="art-rating">★ 4.9</span></div>
+          <div class="game-info"><div><p class="game-category">STRATEGY <span>·</span> 2 MIN</p><h3>Tic-Tac-Toe</h3></div><button class="play-link" type="button" aria-label="Play Tic-Tac-Toe">↗</button></div>
+          <p class="game-description">Outsmart your rival and claim the center line.</p>
+        </article>
+        <article class="game-card" data-game="lights" data-category="puzzle" data-search="lights out puzzle pattern switch board solve">
+          <div class="game-art art-lights"><span class="art-label">LIGHT EVERY TILE</span><span class="game-emoji" aria-hidden="true">✦</span><span class="lights-burst" aria-hidden="true">◌ ◍ ◌</span><span class="art-rating">★ 4.7</span></div>
+          <div class="game-info"><div><p class="game-category">PUZZLE <span>·</span> 4 MIN</p><h3>Lights Out</h3></div><button class="play-link" type="button" aria-label="Play Lights Out">↗</button></div>
+          <p class="game-description">Flip the board until every light glows.</p>
         </article>
       </div>
       <p class="empty-state" id="empty-state" hidden>No games found. Try another search or genre.</p>
@@ -200,6 +210,8 @@
       dots: "Dot Eater",
       snake: "Snake",
       word: "Word Guess",
+      tictactoe: "Tic-Tac-Toe",
+      lights: "Lights Out",
     };
 
     for (const card of gameCards) {
@@ -231,6 +243,8 @@
       if (name === "dots") return playDots(host);
       if (name === "snake") return playSnake(host);
       if (name === "word") return playWord(host);
+      if (name === "tictactoe") return playTicTacToe(host);
+      if (name === "lights") return playLightsOut(host);
       throw new Error(`Unknown game: ${name}`);
     }
 
@@ -816,6 +830,149 @@
         clearInterval(timer);
         document.removeEventListener("keydown", onKey);
       };
+    }
+
+    function playTicTacToe(host) {
+      const instructions = document.createElement("p");
+      instructions.className = "game-instructions";
+      instructions.textContent = "Take turns and make three in a row before your rival does.";
+      const toolbar = document.createElement("div");
+      toolbar.className = "game-toolbar";
+      const status = document.createElement("span");
+      status.className = "game-score";
+      const restart = document.createElement("button");
+      restart.className = "game-restart";
+      restart.type = "button";
+      restart.textContent = "New game";
+      toolbar.append(status, restart);
+      const board = document.createElement("div");
+      board.className = "tictactoe-board";
+      host.append(instructions, toolbar, board);
+
+      let cells;
+      let currentPlayer;
+      let winner;
+      let isDraw;
+
+      function render() {
+        board.innerHTML = "";
+        cells.forEach((value, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "tictactoe-cell";
+          button.textContent = value;
+          button.disabled = Boolean(value) || Boolean(winner) || isDraw;
+          button.setAttribute("aria-label", value ? `Cell ${index + 1}: ${value}` : `Empty cell ${index + 1}`);
+          button.addEventListener("click", () => {
+            if (cells[index] || winner || isDraw) return;
+            cells[index] = currentPlayer;
+            const wins = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+            const found = wins.find(([a, b, c]) => cells[a] && cells[a] === cells[b] && cells[b] === cells[c]);
+            if (found) {
+              winner = currentPlayer;
+              status.textContent = `${winner} WINS`;
+            } else if (cells.every(Boolean)) {
+              isDraw = true;
+              status.textContent = "DRAW";
+            } else {
+              currentPlayer = currentPlayer === "X" ? "O" : "X";
+              status.textContent = `TURN ${currentPlayer}`;
+            }
+            render();
+          });
+          board.append(button);
+        });
+      }
+
+      function reset() {
+        cells = Array(9).fill("");
+        currentPlayer = "X";
+        winner = null;
+        isDraw = false;
+        status.textContent = "TURN X";
+        render();
+      }
+
+      restart.addEventListener("click", reset);
+      reset();
+      return () => {};
+    }
+
+    function playLightsOut(host) {
+      const instructions = document.createElement("p");
+      instructions.className = "game-instructions";
+      instructions.textContent = "Tap a light to flip it and its neighbors until every tile glows.";
+      const toolbar = document.createElement("div");
+      toolbar.className = "game-toolbar";
+      const score = document.createElement("span");
+      score.className = "game-score";
+      const restart = document.createElement("button");
+      restart.className = "game-restart";
+      restart.type = "button";
+      restart.textContent = "New game";
+      toolbar.append(score, restart);
+      const board = document.createElement("div");
+      board.className = "lights-grid";
+      const status = document.createElement("p");
+      status.className = "game-instructions";
+      status.textContent = "Light every tile.";
+      host.append(instructions, toolbar, board, status);
+
+      const size = 5;
+      let lights;
+      let moves;
+      let solved;
+
+      function flipAt(row, column) {
+        const directions = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]];
+        for (const [rowOffset, columnOffset] of directions) {
+          const nextRow = row + rowOffset;
+          const nextColumn = column + columnOffset;
+          if (nextRow >= 0 && nextRow < size && nextColumn >= 0 && nextColumn < size) {
+            lights[nextRow][nextColumn] = !lights[nextRow][nextColumn];
+          }
+        }
+      }
+
+      function render() {
+        board.innerHTML = "";
+        for (let row = 0; row < size; row++) {
+          for (let column = 0; column < size; column++) {
+            const cell = document.createElement("button");
+            cell.type = "button";
+            cell.className = `light-cell${lights[row][column] ? " on" : ""}`;
+            cell.setAttribute("aria-label", `Tile ${row + 1}, ${column + 1}, ${lights[row][column] ? "lit" : "dark"}`);
+            cell.addEventListener("click", () => {
+              if (solved) return;
+              flipAt(row, column);
+              moves += 1;
+              score.textContent = `MOVES ${moves}`;
+              solved = lights.every((line) => line.every(Boolean));
+              status.textContent = solved ? "You solved it!" : "Light every tile.";
+              render();
+            });
+            board.append(cell);
+          }
+        }
+      }
+
+      function reset() {
+        lights = Array.from({ length: size }, () => Array(size).fill(false));
+        for (let index = 0; index < 12; index++) {
+          const row = Math.floor(Math.random() * size);
+          const column = Math.floor(Math.random() * size);
+          flipAt(row, column);
+        }
+        moves = 0;
+        solved = false;
+        score.textContent = "MOVES 0";
+        status.textContent = "Light every tile.";
+        render();
+      }
+
+      restart.addEventListener("click", reset);
+      reset();
+      return () => {};
     }
 
     function playWord(host) {
