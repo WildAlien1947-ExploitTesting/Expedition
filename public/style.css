@@ -23,7 +23,3 @@ text-shadow:
 0 0 40px #00ffff,   /* Soft outer glow */
 0 0 80px #00ffff;   /* Wide diffused glow */;
 }
-
-body{
-background-image:url(/public/assets/emoji-050505-1366x768.png);    
-}
