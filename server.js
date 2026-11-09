@@ -5,7 +5,9 @@ const app = express();
 // Define the network port (default to 3000)
 const PORT = process.env.PORT || 3000;
 
-// Tell Express to serve all static assets from the 'public' folder
+app.use('/scramjet', express.static(path.join(__dirname, 'node_modules/@mercuryworkshop/scramjet/dist')));
+app.use('/controller', express.static(path.join(__dirname, 'node_modules/@mercuryworkshop/scramjet-controller/dist')));
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Fallback route: serve index.html for the home page request

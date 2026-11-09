@@ -1,1089 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#05090d">
-  <meta name="description" content="Find your next favorite game at Expedition Arcade.">
-  <title>Expedition — Official Site</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="page-glow" aria-hidden="true"></div>
-  <header class="site-header">
-    <a class="brand" href="#" aria-label="Expedition Arcade home">
-      <span class="brand-mark" aria-hidden="true">E</span>
-      <span>EXPEDITION<span class="brand-sub">ARCADE</span></span>
-    </a>
-    <nav class="main-nav" aria-label="Main navigation">
-      <a class="nav-link active" href="#discover">Discover</a>
-      <a class="nav-link" href="#games">Games</a>
-      <a class="nav-link" href="#about">About</a>
-    </nav>
-    <a class="header-cta" href="#games"><span class="status-dot"></span> PLAY NOW <span aria-hidden="true">↗</span></a>
-  </header>
-
-  <main>
-    <section class="hero" id="discover" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-line"></span> YOUR NEXT ADVENTURE STARTS HERE</p>
-        <h1 id="hero-title">A whole world<br>of games. <span>One place.</span></h1>
-        <p class="hero-description">Jump into quick rounds, clever puzzles, and all-time classics. Every game plays right here—no downloads or outside links.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#games">Explore games <span aria-hidden="true">→</span></a>
-          <span class="player-note"><span class="player-avatars" aria-hidden="true"><i>J</i><i>K</i><i>+</i></span> Play instantly, right here</span>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#081116">
+    <title>Expedition Browser</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/scramjet/scramjet.js"></script>
+    <script src="/controller/controller.api.js"></script>
+    <script>
+      window.addEventListener("error", (event) => {
+        const label = document.querySelector("#status-label");
+        const box = document.querySelector("#browser-error");
+        if (label && label.textContent === "Starting Scramjet…") {
+          label.textContent = "Browser startup failed";
+          document.querySelector("#connection-status").dataset.state = "error";
+          box.textContent = event.message || "The browser startup script could not be loaded.";
+          box.hidden = false;
+        }
+      }, true);
+      window.addEventListener("unhandledrejection", (event) => {
+        const label = document.querySelector("#status-label");
+        const box = document.querySelector("#browser-error");
+        if (label && label.textContent === "Starting Scramjet…") {
+          label.textContent = "Browser startup failed";
+          document.querySelector("#connection-status").dataset.state = "error";
+          box.textContent = event.reason?.message || "The browser startup script could not be loaded.";
+          box.hidden = false;
+        }
+      });
+    </script>
+    <script type="module" src="/proxy-browser.js"></script>
+  </head>
+  <body>
+    <main class="browser-shell">
+      <header class="browser-header">
+        <a class="brand" href="./" aria-label="Expedition Browser home">
+          <span class="brand-mark" aria-hidden="true">E</span>
+          <span class="brand-name">EXPEDITION<span class="brand-sub">BROWSER</span></span>
+        </a>
+        <div class="header-status" id="connection-status" role="status">
+          <span class="status-light"></span>
+          <span id="status-label">Starting Scramjet…</span>
         </div>
-      </div>
-      <div class="hero-art" aria-label="Featured game: 2048">
-        <div class="orbit orbit-one"></div>
-        <div class="orbit orbit-two"></div>
-        <div class="hero-spark spark-one">✦</div>
-        <div class="hero-spark spark-two">✧</div>
-        <div class="tile-stack" aria-hidden="true">
-          <span class="number-tile tile-eight">8</span>
-          <span class="number-tile tile-four">4</span>
-          <span class="number-tile tile-two">2</span>
-          <span class="number-tile tile-sixteen">16</span>
-        </div>
-        <div class="art-caption"><span class="caption-icon">◈</span><span><b>THE DAILY FAVORITE</b><small>One more round?</small></span><span class="caption-arrow">↗</span></div>
-      </div>
-      <div class="hero-index"><span>01</span><i></i><span>03</span></div>
-    </section>
-
-    <section class="featured-strip" aria-label="Arcade highlights">
-      <div><span class="strip-icon">✳</span><span><b>Instant play</b><small>No installs. Just fun.</small></span></div>
-      <div><span class="strip-icon">⌁</span><span><b>Hand-picked games</b><small>Classics worth replaying.</small></span></div>
-      <div><span class="strip-icon">◉</span><span><b>Find your next</b><small>Something for every mood.</small></span></div>
-      <span class="strip-counter">VOL. 01 <i>—</i> ALWAYS IN SESSION</span>
-    </section>
-
-    <section class="games-section" id="games" aria-labelledby="games-title">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow"><span class="eyebrow-line"></span> THE ARCADE</p>
-          <h2 id="games-title">Pick your <span>next game.</span></h2>
-        </div>
-        <label class="search-box">
-          <span class="search-icon" aria-hidden="true">⌕</span>
-          <span class="visually-hidden">Search games</span>
-          <input id="game-search" type="search" placeholder="Search games..." autocomplete="off">
-          <kbd>/</kbd>
-        </label>
-      </div>
-
-      <div class="catalog-tools">
-        <div class="filter-list" role="group" aria-label="Filter games by genre">
-          <button class="filter-button selected" type="button" data-filter="all" aria-pressed="true">All games <span>08</span></button>
-          <button class="filter-button" type="button" data-filter="puzzle" aria-pressed="false">Puzzle</button>
-          <button class="filter-button" type="button" data-filter="arcade" aria-pressed="false">Arcade</button>
-          <button class="filter-button" type="button" data-filter="strategy" aria-pressed="false">Strategy</button>
-          <button class="filter-button" type="button" data-filter="action" aria-pressed="false">Action</button>
-        </div>
-        <p class="results-count" id="results-count" aria-live="polite">SHOWING <b>08</b> GAMES</p>
-      </div>
-
-      <div class="game-grid" id="game-grid">
-        <article class="game-card" data-game="2048" data-category="puzzle" data-search="2048 number puzzle brain logic">
-          <div class="game-art art-2048"><span class="art-label">A LITTLE NUMBER MAGIC</span><span class="game-emoji" aria-hidden="true">▦</span><span class="art-glyph" aria-hidden="true">2048</span><span class="art-rating">★ 4.9</span></div>
-          <div class="game-info"><div><p class="game-category">PUZZLE <span>·</span> 5 MIN</p><h3>2048</h3></div><button class="play-link" type="button" aria-label="Play 2048">↗</button></div>
-          <p class="game-description">Slide, merge, and make it all add up.</p>
-        </article>
-        <article class="game-card" data-game="blocks" data-category="arcade" data-search="tetris blocks arcade classic">
-          <div class="game-art art-tetris"><span class="art-label">THE CLASSIC NEVER STOPS</span><span class="game-emoji" aria-hidden="true">▰</span><span class="block-shapes" aria-hidden="true">▟ ▞ ▙</span><span class="art-rating">★ 4.8</span></div>
-          <div class="game-info"><div><p class="game-category">ARCADE <span>·</span> ENDLESS</p><h3>Block Drop</h3></div><button class="play-link" type="button" aria-label="Play Block Drop">↗</button></div>
-          <p class="game-description">Keep the stack in check. Chase that high score.</p>
-        </article>
-        <article class="game-card" data-game="memory" data-category="puzzle" data-search="memory match cards pairs">
-          <div class="game-art art-chess"><span class="art-label">FIND THE MATCHING PAIRS</span><span class="game-emoji" aria-hidden="true">◈</span><span class="chess-lines" aria-hidden="true"></span><span class="art-rating">★ 4.9</span></div>
-          <div class="game-info"><div><p class="game-category">PUZZLE <span>·</span> 3 MIN</p><h3>Memory Match</h3></div><button class="play-link" type="button" aria-label="Play Memory Match">↗</button></div>
-          <p class="game-description">Flip the cards, remember what you saw, find every pair.</p>
-        </article>
-        <article class="game-card" data-game="dots" data-category="action" data-search="agar.io agar cells multiplayer action dot eater">
-          <div class="game-art art-agar"><span class="art-label">GROW. SURVIVE. REPEAT.</span><span class="game-emoji" aria-hidden="true">◉</span><span class="agar-dots" aria-hidden="true">•　·　•　·</span><span class="art-rating">★ 4.7</span></div>
-          <div class="game-info"><div><p class="game-category">ARCADE <span>·</span> SOLO</p><h3>Dot Eater</h3></div><button class="play-link" type="button" aria-label="Play Dot Eater">↗</button></div>
-          <p class="game-description">Steer your little blob, gobble up dots, and grow.</p>
-        </article>
-        <article class="game-card" data-game="snake" data-category="action" data-search="slither.io snake multiplayer arcade action">
-          <div class="game-art art-slither"><span class="art-label">DON'T BUMP THE TAIL</span><span class="game-emoji" aria-hidden="true">〰</span><span class="snake-dots" aria-hidden="true">●　●　●　●</span><span class="art-rating">★ 4.6</span></div>
-          <div class="game-info"><div><p class="game-category">ARCADE <span>·</span> ENDLESS</p><h3>Snake</h3></div><button class="play-link" type="button" aria-label="Play Snake">↗</button></div>
-          <p class="game-description">Collect the dots, grow your tail, and watch your corners.</p>
-        </article>
-        <article class="game-card" data-game="word" data-category="puzzle" data-search="wordle words daily word puzzle">
-          <div class="game-art art-wordle"><span class="art-label">FIVE LETTERS. SIX GUESSES.</span><span class="word-tiles" aria-hidden="true"><i>W</i><i>O</i><i>R</i><i>D</i><i>!</i></span><span class="art-rating">★ 4.8</span></div>
-          <div class="game-info"><div><p class="game-category">PUZZLE <span>·</span> DAILY</p><h3>Word Guess</h3></div><button class="play-link" type="button" aria-label="Play Word Guess">↗</button></div>
-          <p class="game-description">Find the five-letter word in six tries.</p>
-        </article>
-        <article class="game-card" data-game="tictactoe" data-category="strategy" data-search="tic tac toe strategy board x o three in a row classic">
-          <div class="game-art art-tictactoe"><span class="art-label">THREE IN A ROW</span><span class="game-emoji" aria-hidden="true">✕</span><span class="tictactoe-pips" aria-hidden="true">◯ × ◯</span><span class="art-rating">★ 4.9</span></div>
-          <div class="game-info"><div><p class="game-category">STRATEGY <span>·</span> 2 MIN</p><h3>Tic-Tac-Toe</h3></div><button class="play-link" type="button" aria-label="Play Tic-Tac-Toe">↗</button></div>
-          <p class="game-description">Outsmart your rival and claim the center line.</p>
-        </article>
-        <article class="game-card" data-game="lights" data-category="puzzle" data-search="lights out puzzle pattern switch board solve">
-          <div class="game-art art-lights"><span class="art-label">LIGHT EVERY TILE</span><span class="game-emoji" aria-hidden="true">✦</span><span class="lights-burst" aria-hidden="true">◌ ◍ ◌</span><span class="art-rating">★ 4.7</span></div>
-          <div class="game-info"><div><p class="game-category">PUZZLE <span>·</span> 4 MIN</p><h3>Lights Out</h3></div><button class="play-link" type="button" aria-label="Play Lights Out">↗</button></div>
-          <p class="game-description">Flip the board until every light glows.</p>
-        </article>
-      </div>
-      <p class="empty-state" id="empty-state" hidden>No games found. Try another search or genre.</p>
-    </section>
-
-    <section class="closing-banner" id="about">
-      <div class="closing-spark" aria-hidden="true">✦</div>
-      <div><p class="eyebrow">THE FUN IS JUST GETTING STARTED</p><h2>Got a few minutes?<br><span>Make them count.</span></h2></div>
-      <a class="button button-outline" href="#games">Find a game <span aria-hidden="true">→</span></a>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <a class="brand footer-brand" href="#"><span class="brand-mark" aria-hidden="true">E</span><span>EXPEDITION<span class="brand-sub">ARCADE</span></span></a>
-    <p>Good games. Good company. Always in session.</p>
-    <span class="footer-copy">© 2025 EXPEDITION ARCADE</span>
-  </footer>
-
-  <dialog class="game-dialog" id="game-dialog" aria-labelledby="game-title">
-    <section class="game-window">
-      <header class="game-window-header">
-        <div><p class="eyebrow"><span class="eyebrow-line"></span> EXPEDITION ARCADE</p><h2 id="game-title">Game</h2></div>
-        <button class="game-close" type="button" aria-label="Close game">×</button>
+        <button class="icon-button settings-trigger" id="settings-trigger" type="button" aria-label="Browser settings" title="Browser settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"></path><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.7a8 8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.8-1l-1.6.7-1.4-2.4L7.1 15a8 8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.7a8 8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.8 1l1.6-.7 1.4 2.4-1.4 1.1a8 8 0 0 1 .1 2Z"></path></svg>
+        </button>
       </header>
-      <div class="game-content" id="game-content"></div>
-    </section>
-  </dialog>
 
-  <script>
-    const searchInput = document.querySelector("#game-search");
-    const filterButtons = [...document.querySelectorAll(".filter-button")];
-    const gameCards = [...document.querySelectorAll(".game-card")];
-    const resultsCount = document.querySelector("#results-count");
-    const emptyState = document.querySelector("#empty-state");
-    let activeFilter = "all";
+      <section class="toolbar" aria-label="Browser controls">
+        <div class="navigation-controls">
+          <button class="icon-button" id="back-button" type="button" aria-label="Go back" title="Go back" disabled>‹</button>
+          <button class="icon-button" id="forward-button" type="button" aria-label="Go forward" title="Go forward" disabled>›</button>
+          <button class="icon-button reload-button" id="reload-button" type="button" aria-label="Reload page" title="Reload page" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.9-3L3 11"></path><path d="M3 5v6h6"></path><path d="M4 13a8 8 0 0 0 14.9 3L21 13"></path><path d="M21 19v-6h-6"></path></svg>
+          </button>
+          <button class="icon-button home-button" id="home-button" type="button" aria-label="Open start page" title="Open start page">⌂</button>
+        </div>
+        <form class="address-form" id="address-form" role="search">
+          <span class="address-lock" aria-hidden="true">⌑</span>
+          <label class="visually-hidden" for="address-input">Search or enter an address</label>
+          <input id="address-input" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="Search or enter an address">
+          <button class="go-button" type="submit" aria-label="Go to address">↵</button>
+        </form>
+        <button class="icon-button menu-button" id="new-tab-button" type="button" aria-label="Open a new start page" title="New tab">+</button>
+      </section>
 
-    function updateGames() {
-      const query = searchInput.value.trim().toLowerCase();
-      let visibleCount = 0;
+      <div class="tab-strip" aria-label="Open tabs">
+        <div class="browser-tab"><span class="tab-favicon">E</span><span id="tab-title">New tab</span><span class="tab-indicator"></span></div>
+        <span class="tab-caption">ONE TAB · YOUR NEXT ADVENTURE</span>
+      </div>
 
-      for (const card of gameCards) {
-        const matchesFilter = activeFilter === "all" || card.dataset.category === activeFilter;
-        const matchesSearch = `${card.dataset.search} ${card.querySelector("h3").textContent}`.toLowerCase().includes(query);
-        const isVisible = matchesFilter && matchesSearch;
-        card.hidden = !isVisible;
-        if (isVisible) visibleCount += 1;
-      }
+      <section class="viewport" aria-label="Browser viewport">
+        <section class="start-page" id="start-page">
+          <div class="start-content">
+            <div class="start-orbit" aria-hidden="true"><span>E</span><i></i><b></b></div>
+            <p class="eyebrow"><span></span> YOUR WINDOW TO THE WEB</p>
+            <h1>Go where<br>curiosity <em>leads.</em></h1>
+            <p class="start-description">Search the web or enter a website to get going. Expedition uses Scramjet to load pages in this browser.</p>
+            <form class="start-search" id="start-search-form" role="search">
+              <span aria-hidden="true">⌕</span>
+              <label class="visually-hidden" for="start-search-input">Search or enter an address</label>
+              <input id="start-search-input" type="text" autocomplete="off" spellcheck="false" placeholder="Search or enter a website">
+              <button type="submit" aria-label="Search">→</button>
+            </form>
+            <div class="quick-links" aria-label="Quick links">
+              <button type="button" data-url="https://www.wikipedia.org/"><span class="quick-icon wiki">W</span><span>Wikipedia</span></button>
+              <button type="button" data-url="https://www.youtube.com/"><span class="quick-icon video">▶</span><span>YouTube</span></button>
+              <button type="button" data-url="https://news.ycombinator.com/"><span class="quick-icon news">Y</span><span>Hacker News</span></button>
+              <button type="button" data-url="https://www.google.com/"><span class="quick-icon search">⌕</span><span>Google</span></button>
+            </div>
+            <p class="transport-note"><span class="note-icon">i</span> Web traffic is sent through your configured Wisp server. Use a provider you trust; this is not an anonymity or privacy guarantee.</p>
+          </div>
+          <div class="start-decoration" aria-hidden="true"><span>EXPLORE</span><i></i><span>AT YOUR PACE</span></div>
+        </section>
+        <iframe class="browser-frame" id="browser-frame" title="Web page" referrerpolicy="no-referrer" allow="fullscreen; autoplay; clipboard-read; clipboard-write"></iframe>
+        <div class="loading-indicator" id="loading-indicator" aria-hidden="true"><span></span></div>
+        <div class="browser-error" id="browser-error" role="alert" hidden></div>
+      </section>
 
-      resultsCount.innerHTML = `SHOWING <b>${String(visibleCount).padStart(2, "0")}</b> ${visibleCount === 1 ? "GAME" : "GAMES"}`;
-      emptyState.hidden = visibleCount > 0;
-    }
+      <footer class="browser-footer">
+        <span><i class="footer-dot"></i> POWERED BY SCRAMJET</span>
+        <span class="footer-center">EXPEDITION BROWSER <b>·</b> BUILT FOR THE OPEN WEB</span>
+        <button type="button" id="footer-settings">CONNECTION SETTINGS <span aria-hidden="true">↗</span></button>
+      </footer>
+    </main>
 
-    for (const button of filterButtons) {
-      button.addEventListener("click", () => {
-        activeFilter = button.dataset.filter;
-        for (const filterButton of filterButtons) {
-          const isSelected = filterButton === button;
-          filterButton.classList.toggle("selected", isSelected);
-          filterButton.setAttribute("aria-pressed", String(isSelected));
-        }
-        updateGames();
-      });
-    }
-
-    searchInput.addEventListener("input", updateGames);
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "/" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
-        event.preventDefault();
-        searchInput.focus();
-      }
-      if (event.key === "Escape" && document.activeElement === searchInput) {
-        searchInput.value = "";
-        updateGames();
-        searchInput.blur();
-      }
-    });
-
-    const gameDialog = document.querySelector("#game-dialog");
-    const gameContent = document.querySelector("#game-content");
-    const gameTitle = document.querySelector("#game-title");
-    let stopCurrentGame = () => {};
-    const gameTitles = {
-      "2048": "2048",
-      blocks: "Block Drop",
-      memory: "Memory Match",
-      dots: "Dot Eater",
-      snake: "Snake",
-      word: "Word Guess",
-      tictactoe: "Tic-Tac-Toe",
-      lights: "Lights Out",
-    };
-
-    for (const card of gameCards) {
-      card.querySelector(".play-link").addEventListener("click", () => {
-        stopCurrentGame();
-        gameContent.replaceChildren();
-        gameTitle.textContent = gameTitles[card.dataset.game];
-        gameDialog.showModal();
-        stopCurrentGame = launchGame(card.dataset.game, gameContent);
-      });
-    }
-
-    function closeGame() {
-      stopCurrentGame();
-      stopCurrentGame = () => {};
-      if (gameDialog.open) gameDialog.close();
-    }
-
-    gameDialog.querySelector(".game-close").addEventListener("click", closeGame);
-    gameDialog.addEventListener("click", (event) => {
-      if (event.target === gameDialog) closeGame();
-    });
-    gameDialog.addEventListener("close", closeGame);
-
-    function launchGame(name, host) {
-      if (name === "2048") return play2048(host);
-      if (name === "blocks") return playBlocks(host);
-      if (name === "memory") return playMemory(host);
-      if (name === "dots") return playDots(host);
-      if (name === "snake") return playSnake(host);
-      if (name === "word") return playWord(host);
-      if (name === "tictactoe") return playTicTacToe(host);
-      if (name === "lights") return playLightsOut(host);
-      throw new Error(`Unknown game: ${name}`);
-    }
-
-    function addControlPad(host, controls) {
-      const pad = document.createElement("div");
-      pad.className = "game-control-pad";
-      for (const [label, action, callback, className] of controls) {
-        const button = document.createElement("button");
-        button.className = `game-control${className ? ` ${className}` : ""}`;
-        button.type = "button";
-        button.textContent = label;
-        button.setAttribute("aria-label", action);
-        button.addEventListener("click", callback);
-        pad.append(button);
-      }
-      host.append(pad);
-      return pad;
-    }
-
-    function play2048(host) {
-      const instructions = document.createElement("p");
-      instructions.className = "game-instructions";
-      instructions.textContent = "Join matching tiles to reach 2048. Use the arrow keys or tap the controls.";
-      const toolbar = document.createElement("div");
-      toolbar.className = "game-toolbar";
-      const scoreDisplay = document.createElement("span");
-      scoreDisplay.className = "game-score";
-      const boardElement = document.createElement("div");
-      boardElement.className = "board-2048";
-      boardElement.setAttribute("role", "grid");
-      const restart = document.createElement("button");
-      restart.className = "game-restart";
-      restart.type = "button";
-      restart.textContent = "New game";
-      toolbar.append(scoreDisplay, restart);
-      host.append(instructions, toolbar, boardElement);
-      let board;
-      let score;
-      let finished;
-
-      function spawn() {
-        const empty = [];
-        board.forEach((value, index) => { if (!value) empty.push(index); });
-        if (empty.length) board[empty[Math.floor(Math.random() * empty.length)]] = Math.random() < 0.9 ? 2 : 4;
-      }
-
-      function render() {
-        scoreDisplay.textContent = `SCORE ${score}`;
-        boardElement.innerHTML = board.map((value) => `<div class="tile-2048 tile-value-${value || 0}" role="gridcell" aria-label="${value || "empty"}">${value || ""}</div>`).join("");
-        if (finished && !host.querySelector(".game-result")) {
-          const result = document.createElement("p");
-          result.className = "game-result";
-          result.textContent = board.includes(2048) ? "You made 2048! Keep going or start a new game." : "No moves left. Give it another go!";
-          host.append(result);
-        }
-      }
-
-      function reset() {
-        board = Array(16).fill(0);
-        score = 0;
-        finished = false;
-        host.querySelector(".game-result")?.remove();
-        spawn();
-        spawn();
-        render();
-      }
-
-      function move(direction) {
-        if (finished) return;
-        const before = board.join(",");
-        for (let line = 0; line < 4; line++) {
-          const indexes = Array.from({ length: 4 }, (_, step) => {
-            if (direction === "left") return line * 4 + step;
-            if (direction === "right") return line * 4 + (3 - step);
-            if (direction === "up") return step * 4 + line;
-            return (3 - step) * 4 + line;
-          });
-          const values = indexes.map((index) => board[index]).filter(Boolean);
-          for (let index = 0; index < values.length - 1; index++) {
-            if (values[index] === values[index + 1]) {
-              values[index] *= 2;
-              score += values[index];
-              values.splice(index + 1, 1);
-            }
-          }
-          while (values.length < 4) values.push(0);
-          indexes.forEach((index, step) => { board[index] = values[step]; });
-        }
-        if (before === board.join(",")) return;
-        spawn();
-        finished = board.includes(2048) || (!board.includes(0) && !["left", "right", "up", "down"].some((moveDirection) => {
-          for (let line = 0; line < 4; line++) {
-            const indexes = Array.from({ length: 4 }, (_, step) => moveDirection === "left" ? line * 4 + step : moveDirection === "right" ? line * 4 + 3 - step : moveDirection === "up" ? step * 4 + line : (3 - step) * 4 + line);
-            for (let step = 0; step < 3; step++) if (board[indexes[step]] === board[indexes[step + 1]]) return true;
-          }
-          return false;
-        }));
-        render();
-      }
-
-      function onKey(event) {
-        const direction = { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down" }[event.key];
-        if (direction) {
-          event.preventDefault();
-          move(direction);
-        }
-      }
-
-      addControlPad(host, [
-        ["↑", "Move up", () => move("up"), "control-up"],
-        ["←", "Move left", () => move("left")],
-        ["↓", "Move down", () => move("down")],
-        ["→", "Move right", () => move("right")],
-      ]);
-      document.addEventListener("keydown", onKey);
-      restart.addEventListener("click", reset);
-      reset();
-      return () => document.removeEventListener("keydown", onKey);
-    }
-
-    function playBlocks(host) {
-      const shapes = [
-        [[1, 1, 1, 1]],
-        [[1, 1], [1, 1]],
-        [[0, 1, 0], [1, 1, 1]],
-        [[1, 0, 0], [1, 1, 1]],
-        [[0, 0, 1], [1, 1, 1]],
-        [[1, 1, 0], [0, 1, 1]],
-        [[0, 1, 1], [1, 1, 0]],
-      ];
-      const help = document.createElement("p");
-      help.className = "game-instructions";
-      help.textContent = "← → move · ↑ rotate · ↓ drop faster · Space hard drop";
-      const wrap = document.createElement("div");
-      wrap.className = "blocks-wrap";
-      const gridElement = document.createElement("div");
-      gridElement.className = "block-grid";
-      const aside = document.createElement("div");
-      aside.className = "blocks-aside";
-      const score = document.createElement("span");
-      score.className = "game-score";
-      const status = document.createElement("p");
-      status.className = "game-instructions";
-      status.textContent = "Clear rows to score.";
-      const restart = document.createElement("button");
-      restart.className = "game-restart";
-      restart.type = "button";
-      restart.textContent = "New game";
-      aside.append(score, status, restart);
-      wrap.append(gridElement, aside);
-      host.append(help, wrap);
-      let board;
-      let piece;
-      let points;
-      let ended;
-      let interval;
-
-      function collides(shape, x, y) {
-        return shape.some((row, rowIndex) => row.some((cell, columnIndex) => cell && (
-          x + columnIndex < 0 || x + columnIndex >= 10 || y + rowIndex >= 18 ||
-          (y + rowIndex >= 0 && board[y + rowIndex][x + columnIndex])
-        )));
-      }
-
-      function render() {
-        const display = board.map((row) => row.slice());
-        if (piece) piece.shape.forEach((row, rowIndex) => row.forEach((cell, columnIndex) => {
-          const y = piece.y + rowIndex;
-          if (cell && y >= 0 && y < 18) display[y][piece.x + columnIndex] = 2;
-        }));
-        gridElement.innerHTML = display.flat().map((cell) => `<i class="block-cell${cell ? ` block-cell-${cell}` : ""}"></i>`).join("");
-        score.textContent = `SCORE ${points}`;
-        if (ended) status.textContent = "Game over. Start a new game to play again.";
-      }
-
-      function spawn() {
-        const shape = shapes[Math.floor(Math.random() * shapes.length)].map((row) => row.slice());
-        piece = { shape, x: Math.floor((10 - shape[0].length) / 2), y: 0 };
-        if (collides(piece.shape, piece.x, piece.y)) {
-          ended = true;
-          clearInterval(interval);
-        }
-      }
-
-      function lockPiece() {
-        piece.shape.forEach((row, rowIndex) => row.forEach((cell, columnIndex) => {
-          const y = piece.y + rowIndex;
-          if (cell && y >= 0) board[y][piece.x + columnIndex] = 1;
-        }));
-        const remaining = board.filter((row) => row.some((cell) => !cell));
-        points += (18 - remaining.length) ** 2 * 100;
-        while (remaining.length < 18) remaining.unshift(Array(10).fill(0));
-        board = remaining;
-        spawn();
-      }
-
-      function tick() {
-        if (ended) return;
-        if (!collides(piece.shape, piece.x, piece.y + 1)) piece.y++;
-        else lockPiece();
-        render();
-      }
-
-      function act(key) {
-        if (ended) return;
-        if (key === "ArrowLeft" && !collides(piece.shape, piece.x - 1, piece.y)) piece.x--;
-        if (key === "ArrowRight" && !collides(piece.shape, piece.x + 1, piece.y)) piece.x++;
-        if (key === "ArrowDown") tick();
-        if (key === " ") {
-          while (!collides(piece.shape, piece.x, piece.y + 1)) piece.y++;
-          lockPiece();
-        }
-        if (key === "ArrowUp") {
-          const rotated = piece.shape[0].map((_, column) => piece.shape.map((row) => row[column]).reverse());
-          if (!collides(rotated, piece.x, piece.y)) piece.shape = rotated;
-        }
-        render();
-      }
-
-      function onKey(event) {
-        if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) return;
-        event.preventDefault();
-        act(event.key);
-      }
-
-      function reset() {
-        clearInterval(interval);
-        board = Array.from({ length: 18 }, () => Array(10).fill(0));
-        points = 0;
-        ended = false;
-        spawn();
-        render();
-        interval = setInterval(tick, 650);
-      }
-
-      addControlPad(host, [
-        ["↻", "Rotate", () => act("ArrowUp"), "control-up"],
-        ["←", "Move left", () => act("ArrowLeft")],
-        ["↓", "Drop", () => act("ArrowDown")],
-        ["→", "Move right", () => act("ArrowRight")],
-        ["⇊", "Hard drop", () => act(" ")],
-      ]);
-      document.addEventListener("keydown", onKey);
-      restart.addEventListener("click", reset);
-      reset();
-      return () => {
-        clearInterval(interval);
-        document.removeEventListener("keydown", onKey);
-      };
-    }
-
-    function playMemory(host) {
-      const symbols = ["✦", "◈", "⬡", "☾", "✧", "❋", "⌘", "⬢"];
-      const instructions = document.createElement("p");
-      instructions.className = "game-instructions";
-      instructions.textContent = "Turn over two cards at a time and find all eight pairs.";
-      const toolbar = document.createElement("div");
-      toolbar.className = "game-toolbar";
-      const score = document.createElement("span");
-      score.className = "game-score";
-      const grid = document.createElement("div");
-      grid.className = "memory-grid";
-      const restart = document.createElement("button");
-      restart.className = "game-restart";
-      restart.type = "button";
-      restart.textContent = "New game";
-      toolbar.append(score, restart);
-      host.append(instructions, toolbar, grid);
-      let first = null;
-      let locked = false;
-      let moves = 0;
-      let matched = 0;
-      const timeouts = new Set();
-
-      function reset() {
-        timeouts.forEach((timeout) => clearTimeout(timeout));
-        timeouts.clear();
-        first = null;
-        locked = false;
-        moves = 0;
-        matched = 0;
-        score.textContent = "MOVES 0";
-        const deck = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
-        grid.innerHTML = "";
-        for (const symbol of deck) {
-          const card = document.createElement("button");
-          card.className = "memory-card";
-          card.type = "button";
-          card.textContent = "?";
-          card.setAttribute("aria-label", "Hidden card");
-          card.addEventListener("click", () => {
-            if (locked || card === first || card.classList.contains("matched")) return;
-            card.textContent = symbol;
-            card.setAttribute("aria-label", symbol);
-            card.classList.add("revealed");
-            if (!first) {
-              first = card;
-              return;
-            }
-            moves++;
-            score.textContent = matched === 16 ? `ALL MATCHED · ${moves} MOVES` : `MOVES ${moves}`;
-            if (first.textContent === symbol) {
-              first.classList.add("matched");
-              card.classList.add("matched");
-              first = null;
-              matched += 2;
-              if (matched === 16) score.textContent = `YOU WON · ${moves} MOVES`;
-              return;
-            }
-            const previous = first;
-            first = null;
-            locked = true;
-            const timeout = setTimeout(() => {
-              timeouts.delete(timeout);
-              previous.textContent = "?";
-              card.textContent = "?";
-              previous.setAttribute("aria-label", "Hidden card");
-              card.setAttribute("aria-label", "Hidden card");
-              previous.classList.remove("revealed");
-              card.classList.remove("revealed");
-              locked = false;
-            }, 700);
-            timeouts.add(timeout);
-          });
-          grid.append(card);
-        }
-      }
-
-      restart.addEventListener("click", reset);
-      reset();
-      return () => timeouts.forEach(clearTimeout);
-    }
-
-    function playDots(host) {
-      const help = document.createElement("p");
-      help.className = "game-instructions";
-      help.textContent = "Move with the arrow keys or WASD. Eat every glowing dot.";
-      const canvas = document.createElement("canvas");
-      canvas.className = "arcade-canvas";
-      canvas.width = 600;
-      canvas.height = 360;
-      canvas.setAttribute("aria-label", "Move the player with arrow keys to collect glowing dots");
-      const toolbar = document.createElement("div");
-      toolbar.className = "game-toolbar";
-      const score = document.createElement("span");
-      score.className = "game-score";
-      const restart = document.createElement("button");
-      restart.className = "game-restart";
-      restart.type = "button";
-      restart.textContent = "New game";
-      toolbar.append(score, restart);
-      host.append(help, canvas, toolbar);
-      const ctx = canvas.getContext("2d");
-      if (!ctx) throw new Error("Canvas is not available in this browser.");
-      const keys = new Set();
-      let player;
-      let foods;
-      let running;
-      let animation;
-      let previousTime;
-
-      function reset() {
-        player = { x: 300, y: 180, radius: 13, score: 0 };
-        foods = Array.from({ length: 22 }, () => ({ x: 16 + Math.random() * 568, y: 16 + Math.random() * 328 }));
-        score.textContent = "DOTS 0 / 22";
-        running = true;
-        previousTime = 0;
-      }
-
-      function collectFoods() {
-        foods = foods.filter((food) => {
-          if (Math.hypot(food.x - player.x, food.y - player.y) < player.radius + 5) {
-            player.score++;
-            player.radius = Math.min(30, 13 + player.score * 0.65);
-            score.textContent = `DOTS ${player.score} / 22`;
-            return false;
-          }
-          return true;
-        });
-        if (!foods.length) running = false;
-      }
-
-      function draw(timestamp) {
-        animation = requestAnimationFrame(draw);
-        const delta = Math.min((timestamp - (previousTime || timestamp)) / 16.67, 2);
-        previousTime = timestamp;
-        if (running) {
-          const speed = 3.2 * delta;
-          if (keys.has("ArrowLeft") || keys.has("a")) player.x -= speed;
-          if (keys.has("ArrowRight") || keys.has("d")) player.x += speed;
-          if (keys.has("ArrowUp") || keys.has("w")) player.y -= speed;
-          if (keys.has("ArrowDown") || keys.has("s")) player.y += speed;
-          player.x = Math.max(player.radius, Math.min(600 - player.radius, player.x));
-          player.y = Math.max(player.radius, Math.min(360 - player.radius, player.y));
-          collectFoods();
-        }
-        ctx.clearRect(0, 0, 600, 360);
-        ctx.fillStyle = "#09151b";
-        ctx.fillRect(0, 0, 600, 360);
-        ctx.strokeStyle = "rgba(0,255,255,.07)";
-        for (let x = 20; x < 600; x += 30) {
-          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 360); ctx.stroke();
-        }
-        for (let y = 20; y < 360; y += 30) {
-          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(600, y); ctx.stroke();
-        }
-        for (const food of foods) {
-          ctx.beginPath();
-          ctx.fillStyle = "#70ffdc";
-          ctx.shadowColor = "#00ffff";
-          ctx.shadowBlur = 12;
-          ctx.arc(food.x, food.y, 4, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.shadowColor = "#00ffff";
-        ctx.shadowBlur = 22;
-        ctx.beginPath();
-        ctx.fillStyle = "#72f6ff";
-        ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-        if (!running) {
-          ctx.fillStyle = "rgba(3,10,14,.74)";
-          ctx.fillRect(0, 0, 600, 360);
-          ctx.textAlign = "center";
-          ctx.fillStyle = "#00ffff";
-          ctx.font = "bold 28px sans-serif";
-          ctx.fillText(foods.length ? "Nice run!" : "All dots collected!", 300, 180);
-          ctx.fillStyle = "#eafafa";
-          ctx.font = "14px sans-serif";
-          ctx.fillText("Start a new game to play again", 300, 210);
-        }
-      }
-
-      function onKey(event) {
-        if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) event.preventDefault();
-        keys.add(event.key.toLowerCase().startsWith("arrow") ? event.key : event.key.toLowerCase());
-      }
-      function onKeyUp(event) {
-        keys.delete(event.key.toLowerCase().startsWith("arrow") ? event.key : event.key.toLowerCase());
-      }
-
-      addControlPad(host, [
-        ["↑", "Move up", () => { if (running) { player.y = Math.max(player.radius, player.y - 28); collectFoods(); } }, "control-up"],
-        ["←", "Move left", () => { if (running) { player.x = Math.max(player.radius, player.x - 28); collectFoods(); } }],
-        ["↓", "Move down", () => { if (running) { player.y = Math.min(360 - player.radius, player.y + 28); collectFoods(); } }],
-        ["→", "Move right", () => { if (running) { player.x = Math.min(600 - player.radius, player.x + 28); collectFoods(); } }],
-      ]);
-      document.addEventListener("keydown", onKey);
-      document.addEventListener("keyup", onKeyUp);
-      restart.addEventListener("click", reset);
-      reset();
-      animation = requestAnimationFrame(draw);
-      return () => {
-        cancelAnimationFrame(animation);
-        document.removeEventListener("keydown", onKey);
-        document.removeEventListener("keyup", onKeyUp);
-      };
-    }
-
-    function playSnake(host) {
-      const help = document.createElement("p");
-      help.className = "game-instructions";
-      help.textContent = "Use the arrow keys or WASD to eat dots. Don't hit the wall or yourself.";
-      const canvas = document.createElement("canvas");
-      canvas.className = "arcade-canvas";
-      canvas.width = 600;
-      canvas.height = 360;
-      canvas.setAttribute("aria-label", "Snake game, controlled by arrow keys");
-      const toolbar = document.createElement("div");
-      toolbar.className = "game-toolbar";
-      const score = document.createElement("span");
-      score.className = "game-score";
-      const restart = document.createElement("button");
-      restart.className = "game-restart";
-      restart.type = "button";
-      restart.textContent = "New game";
-      toolbar.append(score, restart);
-      host.append(help, canvas, toolbar);
-      const ctx = canvas.getContext("2d");
-      if (!ctx) throw new Error("Canvas is not available in this browser.");
-      const cell = 20;
-      const width = 30;
-      const height = 18;
-      const directions = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1], a: [-1, 0], d: [1, 0], w: [0, -1], s: [0, 1] };
-      let snake;
-      let direction;
-      let nextDirection;
-      let food;
-      let points;
-      let timer;
-      let ended;
-
-      function placeFood() {
-        do {
-          food = { x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height) };
-        } while (snake.some((segment) => segment.x === food.x && segment.y === food.y));
-      }
-
-      function draw() {
-        ctx.fillStyle = "#09151b";
-        ctx.fillRect(0, 0, 600, 360);
-        ctx.fillStyle = "#ffb36b";
-        ctx.shadowColor = "#ff9f4b";
-        ctx.shadowBlur = 14;
-        ctx.beginPath();
-        ctx.arc(food.x * cell + cell / 2, food.y * cell + cell / 2, 6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-        snake.forEach((segment, index) => {
-          ctx.fillStyle = index ? "#2ebba8" : "#79fff0";
-          ctx.fillRect(segment.x * cell + 2, segment.y * cell + 2, cell - 4, cell - 4);
-        });
-        if (ended) {
-          ctx.fillStyle = "rgba(3,10,14,.72)";
-          ctx.fillRect(0, 0, 600, 360);
-          ctx.textAlign = "center";
-          ctx.fillStyle = "#00ffff";
-          ctx.font = "bold 28px sans-serif";
-          ctx.fillText("Game over", 300, 180);
-          ctx.fillStyle = "#eafafa";
-          ctx.font = "14px sans-serif";
-          ctx.fillText(`Score ${points} · start a new game to try again`, 300, 210);
-        }
-      }
-
-      function tick() {
-        if (ended) return;
-        direction = nextDirection;
-        const head = { x: snake[0].x + direction[0], y: snake[0].y + direction[1] };
-        const ate = head.x === food.x && head.y === food.y;
-        if (head.x < 0 || head.x >= width || head.y < 0 || head.y >= height || snake.slice(0, ate ? snake.length : -1).some((part) => part.x === head.x && part.y === head.y)) {
-          ended = true;
-          draw();
-          return;
-        }
-        snake.unshift(head);
-        if (ate) {
-          points++;
-          score.textContent = `SCORE ${points}`;
-          placeFood();
-        } else snake.pop();
-        draw();
-      }
-
-      function reset() {
-        clearInterval(timer);
-        snake = [{ x: 15, y: 9 }, { x: 14, y: 9 }, { x: 13, y: 9 }];
-        direction = [1, 0];
-        nextDirection = direction;
-        points = 0;
-        ended = false;
-        score.textContent = "SCORE 0";
-        placeFood();
-        draw();
-        timer = setInterval(tick, 125);
-      }
-
-      function turn(key) {
-        const pressed = key.length === 1 ? key.toLowerCase() : key;
-        const chosen = directions[pressed];
-        if (!chosen) return;
-        if (chosen[0] !== -direction[0] || chosen[1] !== -direction[1]) nextDirection = chosen;
-      }
-
-      function onKey(event) {
-        const pressed = event.key.length === 1 ? event.key.toLowerCase() : event.key;
-        if (!directions[pressed]) return;
-        event.preventDefault();
-        turn(event.key);
-      }
-
-      addControlPad(host, [
-        ["↑", "Move up", () => turn("ArrowUp"), "control-up"],
-        ["←", "Move left", () => turn("ArrowLeft")],
-        ["↓", "Move down", () => turn("ArrowDown")],
-        ["→", "Move right", () => turn("ArrowRight")],
-      ]);
-      document.addEventListener("keydown", onKey);
-      restart.addEventListener("click", reset);
-      reset();
-      return () => {
-        clearInterval(timer);
-        document.removeEventListener("keydown", onKey);
-      };
-    }
-
-    function playTicTacToe(host) {
-      const instructions = document.createElement("p");
-      instructions.className = "game-instructions";
-      instructions.textContent = "Take turns and make three in a row before your rival does.";
-      const toolbar = document.createElement("div");
-      toolbar.className = "game-toolbar";
-      const status = document.createElement("span");
-      status.className = "game-score";
-      const restart = document.createElement("button");
-      restart.className = "game-restart";
-      restart.type = "button";
-      restart.textContent = "New game";
-      toolbar.append(status, restart);
-      const board = document.createElement("div");
-      board.className = "tictactoe-board";
-      host.append(instructions, toolbar, board);
-
-      let cells;
-      let currentPlayer;
-      let winner;
-      let isDraw;
-
-      function render() {
-        board.innerHTML = "";
-        cells.forEach((value, index) => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "tictactoe-cell";
-          button.textContent = value;
-          button.disabled = Boolean(value) || Boolean(winner) || isDraw;
-          button.setAttribute("aria-label", value ? `Cell ${index + 1}: ${value}` : `Empty cell ${index + 1}`);
-          button.addEventListener("click", () => {
-            if (cells[index] || winner || isDraw) return;
-            cells[index] = currentPlayer;
-            const wins = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
-            const found = wins.find(([a, b, c]) => cells[a] && cells[a] === cells[b] && cells[b] === cells[c]);
-            if (found) {
-              winner = currentPlayer;
-              status.textContent = `${winner} WINS`;
-            } else if (cells.every(Boolean)) {
-              isDraw = true;
-              status.textContent = "DRAW";
-            } else {
-              currentPlayer = currentPlayer === "X" ? "O" : "X";
-              status.textContent = `TURN ${currentPlayer}`;
-            }
-            render();
-          });
-          board.append(button);
-        });
-      }
-
-      function reset() {
-        cells = Array(9).fill("");
-        currentPlayer = "X";
-        winner = null;
-        isDraw = false;
-        status.textContent = "TURN X";
-        render();
-      }
-
-      restart.addEventListener("click", reset);
-      reset();
-      return () => {};
-    }
-
-    function playLightsOut(host) {
-      const instructions = document.createElement("p");
-      instructions.className = "game-instructions";
-      instructions.textContent = "Tap a light to flip it and its neighbors until every tile glows.";
-      const toolbar = document.createElement("div");
-      toolbar.className = "game-toolbar";
-      const score = document.createElement("span");
-      score.className = "game-score";
-      const restart = document.createElement("button");
-      restart.className = "game-restart";
-      restart.type = "button";
-      restart.textContent = "New game";
-      toolbar.append(score, restart);
-      const board = document.createElement("div");
-      board.className = "lights-grid";
-      const status = document.createElement("p");
-      status.className = "game-instructions";
-      status.textContent = "Light every tile.";
-      host.append(instructions, toolbar, board, status);
-
-      const size = 5;
-      let lights;
-      let moves;
-      let solved;
-
-      function flipAt(row, column) {
-        const directions = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]];
-        for (const [rowOffset, columnOffset] of directions) {
-          const nextRow = row + rowOffset;
-          const nextColumn = column + columnOffset;
-          if (nextRow >= 0 && nextRow < size && nextColumn >= 0 && nextColumn < size) {
-            lights[nextRow][nextColumn] = !lights[nextRow][nextColumn];
-          }
-        }
-      }
-
-      function render() {
-        board.innerHTML = "";
-        for (let row = 0; row < size; row++) {
-          for (let column = 0; column < size; column++) {
-            const cell = document.createElement("button");
-            cell.type = "button";
-            cell.className = `light-cell${lights[row][column] ? " on" : ""}`;
-            cell.setAttribute("aria-label", `Tile ${row + 1}, ${column + 1}, ${lights[row][column] ? "lit" : "dark"}`);
-            cell.addEventListener("click", () => {
-              if (solved) return;
-              flipAt(row, column);
-              moves += 1;
-              score.textContent = `MOVES ${moves}`;
-              solved = lights.every((line) => line.every(Boolean));
-              status.textContent = solved ? "You solved it!" : "Light every tile.";
-              render();
-            });
-            board.append(cell);
-          }
-        }
-      }
-
-      function reset() {
-        lights = Array.from({ length: size }, () => Array(size).fill(false));
-        for (let index = 0; index < 12; index++) {
-          const row = Math.floor(Math.random() * size);
-          const column = Math.floor(Math.random() * size);
-          flipAt(row, column);
-        }
-        moves = 0;
-        solved = false;
-        score.textContent = "MOVES 0";
-        status.textContent = "Light every tile.";
-        render();
-      }
-
-      restart.addEventListener("click", reset);
-      reset();
-      return () => {};
-    }
-
-    function playWord(host) {
-      const words = ["apple", "beach", "brain", "candy", "charm", "chess", "cloud", "dance", "dream", "flame", "fruit", "ghost", "grape", "green", "happy", "heart", "house", "light", "magic", "metal", "night", "ocean", "party", "pearl", "piano", "plant", "proud", "radio", "river", "robot", "shine", "smile", "sound", "space", "spice", "sport", "storm", "sunny", "sweet", "tiger", "toast", "truly", "water", "world", "write"];
-      const allowed = new Set(words);
-      const help = document.createElement("p");
-      help.className = "game-instructions";
-      help.textContent = "Guess the five-letter word in six tries. Green is right; yellow is in the word.";
-      const grid = document.createElement("div");
-      grid.className = "word-grid";
-      const form = document.createElement("form");
-      form.className = "word-form";
-      const input = document.createElement("input");
-      input.className = "word-input";
-      input.type = "text";
-      input.maxLength = 5;
-      input.autocomplete = "off";
-      input.spellcheck = false;
-      input.placeholder = "Type a five-letter word";
-      input.setAttribute("aria-label", "Your five-letter word guess");
-      const submit = document.createElement("button");
-      submit.className = "game-restart";
-      submit.type = "submit";
-      submit.textContent = "Guess";
-      form.append(input, submit);
-      const message = document.createElement("p");
-      message.className = "game-instructions word-message";
-      message.setAttribute("aria-live", "polite");
-      host.append(help, grid, form, message);
-      let answer;
-      let guesses;
-      let ended;
-
-      function render() {
-        grid.innerHTML = "";
-        for (let row = 0; row < 6; row++) {
-          for (let column = 0; column < 5; column++) {
-            const tile = document.createElement("span");
-            tile.className = "word-cell";
-            if (guesses[row]) {
-              const guess = guesses[row];
-              const remaining = [...answer];
-              guess.split("").forEach((value, index) => {
-                if (value === answer[index]) remaining[index] = null;
-              });
-              let result = "wrong";
-              for (let index = 0; index <= column; index++) {
-                const letter = guess[index];
-                if (letter === answer[index]) {
-                  if (index === column) result = "correct";
-                } else {
-                  const matchIndex = remaining.indexOf(letter);
-                  if (matchIndex !== -1) {
-                    if (index === column) result = "present";
-                    remaining[matchIndex] = null;
-                  } else if (index === column) result = "wrong";
-                }
-              }
-              tile.classList.add(`word-${result}`);
-              tile.textContent = guess[column].toUpperCase();
-            } else tile.textContent = "";
-            grid.append(tile);
-          }
-        }
-        input.disabled = ended;
-        submit.disabled = ended;
-      }
-
-      function reset() {
-        answer = words[Math.floor(Math.random() * words.length)];
-        guesses = [];
-        ended = false;
-        message.textContent = "";
-        input.value = "";
-        input.disabled = false;
-        submit.disabled = false;
-        render();
-        input.focus();
-      }
-
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const guess = input.value.trim().toLowerCase();
-        if (guess.length !== 5 || !/^[a-z]{5}$/.test(guess)) {
-          message.textContent = "Enter a five-letter word.";
-          return;
-        }
-        if (!allowed.has(guess)) {
-          message.textContent = "That word isn't in this little dictionary. Try another.";
-          return;
-        }
-        guesses.push(guess);
-        input.value = "";
-        if (guess === answer) {
-          ended = true;
-          message.textContent = "You got it! Start a new puzzle for another word.";
-        } else if (guesses.length === 6) {
-          ended = true;
-          message.textContent = `Out of guesses. The word was ${answer.toUpperCase()}.`;
-        } else message.textContent = `${6 - guesses.length} guesses left.`;
-        render();
-      });
-      const restart = document.createElement("button");
-      restart.className = "game-restart word-new";
-      restart.type = "button";
-      restart.textContent = "New word";
-      restart.addEventListener("click", reset);
-      host.append(restart);
-      reset();
-      return () => {};
-    }
-  </script>
-</body>
+    <dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+      <form class="settings-card" id="settings-form">
+        <div class="dialog-heading">
+          <div><p class="eyebrow"><span></span> CONNECTION</p><h2 id="settings-title">Browser settings</h2></div>
+          <button class="icon-button dialog-close" id="settings-close" type="button" aria-label="Close settings">×</button>
+        </div>
+        <label class="settings-field" for="wisp-input">
+          <span>Wisp server URL</span>
+          <input id="wisp-input" type="url" placeholder="wss://your-wisp-server/">
+          <small>Scramjet needs a Wisp server to carry web requests. Use a secure <code>wss://</code> endpoint on hosted sites.</small>
+        </label>
+        <p class="settings-warning"><strong>Privacy note</strong> The Wisp provider can observe connection metadata. Only use a server you trust, and avoid entering sensitive information.</p>
+        <p class="settings-message" id="settings-message" role="status" hidden></p>
+        <div class="dialog-actions">
+          <button class="button-secondary" id="settings-cancel" type="button">Cancel</button>
+          <button class="button-primary" type="submit">Save connection</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
 </html>
