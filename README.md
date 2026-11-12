@@ -1,6 +1,6 @@
 # Expedition
 
-## Run in GitHub Codespaces
+## Run in GitHub Codespaces ONLY!!!
 
 1. Open the [Expedition repository](https://github.com/WildAlien1947-ExploitTesting/Expedition) on GitHub.
 2. Select **Code**, open the **Codespaces** tab, and choose **Create codespace on main**.
